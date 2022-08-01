@@ -28,6 +28,9 @@ class _ChatPageState extends State<ChatPage> {
     // TODO: implement initState
     _scrollController = ScrollController();
     MessageManager.instance.getMessageQuery();
+    Future.delayed(Duration(seconds: 1), () {
+      jumpToBottom();
+    });
 
     super.initState();
   }
@@ -37,8 +40,6 @@ class _ChatPageState extends State<ChatPage> {
       child: FirebaseAnimatedList(
         controller: _scrollController,
         query: MessageManager.instance.getMessageQuery(),
-        sort: (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key),
-          reverse: true,
         itemBuilder: (context, snapshot, animation, index) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final message = MessageModel.fromJson(json);
