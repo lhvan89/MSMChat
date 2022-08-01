@@ -2,45 +2,71 @@ import 'package:flutter/material.dart';
 import 'package:msmchat/manager/account_manager.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/chat_page.dart';
+import 'package:msmchat/pages/profile_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  late UserModel currentUser;
+
   Widget build(BuildContext context) {
-    return Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(4),
-        child: Stack(
-          children: <Widget>[
-            Positioned.fill(
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: <Color>[
-                      Color(0xFF0D47A1),
-                      Color(0xFF1976D2),
-                      Color(0xFF42A5F5),
-                    ],
-                  ),
-                ),
+    final userList = AccountManager.instance.userList;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: userList.length,
+            itemBuilder: (context, index) {
+              final user = userList[index];
+              return _userItem(user);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _userItem(UserModel user) {
+    return InkWell(
+      onTap: () {
+        AccountManager.instance.currentUser = user;
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.green,
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Image.network(
+                    'https://ssl.gstatic.com/docs/common/profile/${user.username}_lg.png'),
               ),
             ),
-            TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(16.0),
-                primary: Colors.white,
-                textStyle: const TextStyle(fontSize: 20),
-              ),
-              onPressed: () {
-                AccountManager.instance.currentUser = (AccountManager.instance.userList.toList()..shuffle()).first;
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage()));
-              },
-              child: const Text('BẮT ĐẦU CHAT'),
-            ),
+            const SizedBox(width: 8),
+            Text(
+              user.name,
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54),
+            )
           ],
         ),
       ),
     );
   }
+
+
 }

@@ -77,7 +77,10 @@ class _ChatPageState extends State<ChatPage> {
               IconButton(onPressed: () {
                 Navigator.pop(context);
               }, icon: Icon(Icons.arrow_back)),
-              const Text('App Chat'),
+              Spacer(),
+              const Text('CHUYỆN TRÒ LINH TINH'),
+              Spacer(),
+              SizedBox(width: 32,)
             ],
           ),
         ),
@@ -152,32 +155,34 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _messageContent(MessageModel message, bool isMyMessage) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        color: Colors.white,
-        border: Border.all(width: 1, color: Colors.grey.withOpacity(0.3)),
-      ),
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment:
-        isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          if (isMyMessage == false)
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          color: Colors.white,
+          border: Border.all(width: 1, color: Colors.grey.withOpacity(0.3)),
+        ),
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment:
+          isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            if (isMyMessage == false)
+              Text(
+                message.name,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.black54),
+              ),
+            const SizedBox(height: 8),
+            Text(message.text, style: TextStyle(fontSize: 18),),
+            const SizedBox(height: 8),
             Text(
-              message.name,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.black54),
-            ),
-          const SizedBox(height: 8),
-          Text(message.text, style: TextStyle(fontSize: 18),),
-          const SizedBox(height: 8),
-          Text(
-            convertDateToString(message.date, 'HH:mm'),
-            style: const TextStyle(color: Colors.black45, fontSize: 12),
-            textAlign: TextAlign.right,
-          )
-        ],
+              convertDateToString(message.date, 'HH:mm'),
+              style: const TextStyle(color: Colors.black45, fontSize: 12),
+              textAlign: TextAlign.right,
+            )
+          ],
+        ),
       ),
     );
   }

@@ -11,7 +11,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: Text('ĐĂNG NHẬP')
         ),
         body: HomePage(),
       ),
