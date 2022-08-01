@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget {
                 Navigator.pop(context);
               }, icon: Icon(Icons.arrow_back)),
               Spacer(),
-              const Text('Profile'),
+              const Text('TÀI KHOẢN'),
               Spacer(),
               SizedBox(width: 32,)
             ],

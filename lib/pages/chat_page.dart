@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +28,7 @@ class _ChatPageState extends State<ChatPage> {
     // TODO: implement initState
     _scrollController = ScrollController();
     MessageManager.instance.getMessageQuery();
+
     super.initState();
   }
 
@@ -35,6 +37,8 @@ class _ChatPageState extends State<ChatPage> {
       child: FirebaseAnimatedList(
         controller: _scrollController,
         query: MessageManager.instance.getMessageQuery(),
+        sort: (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key),
+          reverse: true,
         itemBuilder: (context, snapshot, animation, index) {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final message = MessageModel.fromJson(json);
@@ -68,7 +72,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    jumpToBottom();
+    // jumpToBottom();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(

@@ -76,9 +76,4 @@ class UserModel {
   factory UserModel.wolf() => UserModel('wolf', 'Sói ẩn danh');
   factory UserModel.wolverine() => UserModel('wolverine', 'Chồn gulo ẩn danh');
   factory UserModel.wombat() => UserModel('wombat', 'Wombat ẩn danh');
-
-
-
-
 }
-
