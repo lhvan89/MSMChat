@@ -8,8 +8,8 @@ class MessageManager {
 
   final DatabaseReference _messagesRef = FirebaseDatabase.instance.reference().child('messages');
 
-  void saveMessage(MessageModel message) {
-    _messagesRef.push().set(message.toJson());
+  Future<void> saveMessage(MessageModel message) async {
+    await _messagesRef.push().set(message.toJson());
   }
 
   Query getMessageQuery() {
