@@ -4,6 +4,8 @@ import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/base_staless_widget.dart';
 import 'package:msmchat/pages/login/login_cubit.dart';
 
+import '../../event_bus/event_bus.dart';
+
 class LoginPage extends BaseStatelessWidget<LoginCubit> {
   LoginPage({Key? key}) : super(key: key, cubit: LoginCubit());
 
@@ -35,10 +37,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
     return InkWell(
       onTap: () {
         AccountManager.instance.currentUser = user;
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => ChatPage()),
-        // );
+        eventBus.fire(ReloadUserEvent());
         Navigator.pop(context);
       },
       child: Padding(

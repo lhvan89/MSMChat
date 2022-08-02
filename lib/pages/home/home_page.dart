@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
               itemCount: userList.length,
               itemBuilder: (context, index) {
                 final user = userList[index];
+                if (user.username == AccountManager.instance.currentUser.username) return const SizedBox();
                 return _userItem(user);
               },
             ),

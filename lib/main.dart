@@ -6,7 +6,7 @@ import 'manager/account_manager.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   AccountManager.instance.currentUser = (AccountManager.instance.userList.toList()..shuffle()).first;
-  runApp(MainApp());
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
