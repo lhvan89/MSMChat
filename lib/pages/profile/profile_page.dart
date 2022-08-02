@@ -14,7 +14,7 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TÀI KHOẢN'),
+        title: const Text('PROFILE'),
       ),
       body: StreamBuilder<UserModel>(
         stream: cubit.userStream,
@@ -36,7 +36,7 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
                       SizedBox(width: 24),
-                      Text('Chọn user khác', style: TextStyle(fontSize: 17, color: Colors.green)),
+                      Text('Đăng nhập user khác', style: TextStyle(fontSize: 17, color: Colors.green)),
                       SizedBox(width: 4),
                       Icon(Icons.change_circle, color: Colors.green),
                       SizedBox(width: 24),
@@ -65,7 +65,7 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
                 const SizedBox(height: 40),
                 _button(
                     context: context,
-                    title: 'ĐĂNG NHẬP',
+                    title: 'BACK HOME',
                     onPressed: () {
                       // List<String> users = [
                       //   AccountManager.instance.currentUser.username,
