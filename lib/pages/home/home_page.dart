@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:msmchat/manager/account_manager.dart';
 import 'package:msmchat/models/user_model.dart';
-import 'package:msmchat/pages/chat_page.dart';
-import 'package:msmchat/pages/profile_page.dart';
+import 'package:msmchat/pages/chat/chat_page.dart';
+import 'package:msmchat/pages/profile/profile_page.dart';
+
+import '../../manager/message_manager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,29 +19,39 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     final userList = AccountManager.instance.userList;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: userList.length,
-            itemBuilder: (context, index) {
-              final user = userList[index];
-              return _userItem(user);
-            },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('BẠN BÈ'),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: userList.length,
+              itemBuilder: (context, index) {
+                final user = userList[index];
+                return _userItem(user);
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _userItem(UserModel user) {
     return InkWell(
       onTap: () {
-        AccountManager.instance.currentUser = user;
+        List<String> users = [
+          AccountManager.instance.currentUser.username,
+          user.username
+        ];
+        users.sort();
+        MessageManager.instance.connectRoom(users.join('_'));
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => ChatPage()),
         );
       },
       child: Padding(

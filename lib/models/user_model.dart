@@ -43,13 +43,13 @@ class UserModel {
   factory UserModel.jackalope() => UserModel('jackalope', 'Con Jackalope ẩn danh');
   factory UserModel.kangaroo() => UserModel('kangaroo', 'Kangaroo ẩn danh');
   factory UserModel.koala() => UserModel('koala', 'Koala ẩn danh');
-  factory UserModel.kraken() => UserModel('kraken', 'Bạch tuộc khổng lồ ẩn dan');
+  factory UserModel.kraken() => UserModel('kraken', 'Bạch tuộc khổng lồ ẩn danh');
   factory UserModel.lemur() => UserModel('lemur', 'Vượn cáo ẩn danh');
   factory UserModel.leopard() => UserModel('leopard', 'Báo hoa mai ẩn danh');
-  factory UserModel.liger() => UserModel('liger', 'Sư hổ ẩn dan');
+  factory UserModel.liger() => UserModel('liger', 'Sư hổ ẩn danh');
   factory UserModel.llama() => UserModel('llama', 'Lạc đà không bướu ẩn danh');
   factory UserModel.manatee() => UserModel('manatee', 'Lợn biển ẩn danh');
-  factory UserModel.mink() => UserModel('mink', 'Chồn vizon ẩn dan');
+  factory UserModel.mink() => UserModel('mink', 'Chồn vizon ẩn danh');
   factory UserModel.monkey() => UserModel('monkey', 'Khỉ ẩn danh');
   factory UserModel.moose() => UserModel('moose', 'Nai sừng tấm ẩn danh');
   factory UserModel.narwhal() => UserModel('narwhal', 'Kỳ lân biển ẩn danh');

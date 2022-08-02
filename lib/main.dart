@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:msmchat/pages/home_page.dart';
+import 'package:msmchat/pages/profile/profile_page.dart';
 
-void main() => runApp(MainApp());
+import 'manager/account_manager.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  AccountManager.instance.currentUser = (AccountManager.instance.userList.toList()..shuffle()).first;
+  runApp(MainApp());
+}
 
 class MainApp extends StatelessWidget {
   const MainApp({Key? key}) : super(key: key);
@@ -9,12 +15,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('ĐĂNG NHẬP')
-        ),
-        body: HomePage(),
-      ),
+      home: ProfilePage(),
     );
   }
 }

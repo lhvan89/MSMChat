@@ -6,14 +6,22 @@ class MessageManager {
   MessageManager._instance();
   static final MessageManager instance = MessageManager._instance();
 
-  final DatabaseReference _messagesRef = FirebaseDatabase.instance.reference().child('messages');
+  static DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
+
+  Query getListRoom() {
+    return FirebaseDatabase.instance.reference();
+  }
+
+  void connectRoom(String roomCode) {
+    databaseReference = FirebaseDatabase.instance.reference().child('$roomCode');
+  }
 
   Future<void> saveMessage(MessageModel message) async {
-    await _messagesRef.push().set(message.toJson());
+    await databaseReference.push().set(message.toJson());
   }
 
   Query getMessageQuery() {
-    return _messagesRef;
+    return databaseReference;
   }
 
 }
