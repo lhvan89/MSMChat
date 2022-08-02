@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:msmchat/manager/account_manager.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/chat/chat_page.dart';
-import 'package:msmchat/pages/profile/profile_page.dart';
 
 import '../../manager/message_manager.dart';
 
@@ -21,23 +20,16 @@ class _HomePageState extends State<HomePage> {
     final userList = AccountManager.instance.userList;
     return Scaffold(
       appBar: AppBar(
-        title: Text('BẠN BÈ'),
+        title: Text('CHỌN USER ĐỂ CHAT'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: userList.length,
-              itemBuilder: (context, index) {
-                final user = userList[index];
-                if (user.username == AccountManager.instance.currentUser.username) return const SizedBox();
-                return _userItem(user);
-              },
-            ),
-          ),
-        ],
-      ),
+      body: ListView.builder(
+        itemCount: userList.length,
+        itemBuilder: (context, index) {
+          final user = userList[index];
+          if (user.username == AccountManager.instance.currentUser.username) return const SizedBox();
+          return _userItem(user);
+        },
+      )
     );
   }
 
@@ -52,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         MessageManager.instance.connectRoom(users.join('_'));
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatPage()),
+          MaterialPageRoute(builder: (context) => ChatPage(title: user.name,)),
         );
       },
       child: Padding(

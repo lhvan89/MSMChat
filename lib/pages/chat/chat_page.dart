@@ -9,13 +9,14 @@ import '../../models/message_model.dart';
 import '../../utils/utils.dart';
 
 class ChatPage extends BaseStatelessWidget<ChatCubit> {
-  ChatPage({Key? key}) : super(key: key, cubit: ChatCubit());
+  String? title;
+  ChatPage({Key? key, this.title}) : super(key: key, cubit: ChatCubit());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CHUYỆN TRÒ LINH TINH'),
+        title: Text(title?.toUpperCase() ?? ''),
       ),
       body: SafeArea(
         child: Column(

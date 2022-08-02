@@ -14,7 +14,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
     final userList = AccountManager.instance.userList;
     return Scaffold(
       appBar: AppBar(
-        title: Text('CHỌN USER ĐĂNG NHẬP'),
+        title: const Text('CHỌN USER ĐỂ ĐĂNG NHẬP'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
