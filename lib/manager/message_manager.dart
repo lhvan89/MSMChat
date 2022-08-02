@@ -8,12 +8,8 @@ class MessageManager {
 
   static DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
 
-  Query getListRoom() {
-    return FirebaseDatabase.instance.reference();
-  }
-
   void connectRoom(String roomCode) {
-    databaseReference = FirebaseDatabase.instance.reference().child('$roomCode');
+    databaseReference = FirebaseDatabase.instance.reference().child('messages/$roomCode');
   }
 
   Future<void> saveMessage(MessageModel message) async {

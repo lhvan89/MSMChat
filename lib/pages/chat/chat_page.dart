@@ -2,6 +2,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:msmchat/pages/base_staless_widget.dart';
 import 'package:msmchat/pages/chat/chat_cubit.dart';
+import 'package:msmchat/widgets/widgets.dart';
 
 import '../../manager/account_manager.dart';
 import '../../manager/message_manager.dart';
@@ -96,8 +97,7 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
       backgroundColor: Colors.green,
       child: Padding(
         padding: const EdgeInsets.all(5.0),
-        child: Image.network(
-            'https://ssl.gstatic.com/docs/common/profile/${username}_lg.png'),
+        child: Text(GetAvatarName(username).toUpperCase()),
       ),
     );
   }

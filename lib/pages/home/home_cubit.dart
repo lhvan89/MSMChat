@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:msmchat/cubit/base_cubit.dart';
 
-class RoomCubit extends BaseCubit {
+class HomeCubit extends BaseCubit {
 
   ScrollController scrollController = ScrollController();
 
@@ -9,4 +9,14 @@ class RoomCubit extends BaseCubit {
   void initCubit() {
     super.initCubit();
   }
+
+  void getListUsers() {
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
 }

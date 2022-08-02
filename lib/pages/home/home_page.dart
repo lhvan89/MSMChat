@@ -1,69 +1,86 @@
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:msmchat/manager/account_manager.dart';
 import 'package:msmchat/models/user_model.dart';
+import 'package:msmchat/pages/base_staless_widget.dart';
 import 'package:msmchat/pages/chat/chat_page.dart';
+import 'package:msmchat/pages/home/home_cubit.dart';
+import 'package:msmchat/widgets/widgets.dart';
 
 import '../../manager/message_manager.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends BaseStatelessWidget<HomeCubit> {
+  HomePage({Key? key}) : super(key: key, cubit: HomeCubit());
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  late UserModel currentUser;
-
   Widget build(BuildContext context) {
-    final userList = AccountManager.instance.userList;
     return Scaffold(
       appBar: AppBar(
-        title: Text('CHỌN USER ĐỂ CHAT'),
+        title: const Text('List User'),
       ),
-      body: ListView.builder(
-        itemCount: userList.length,
-        itemBuilder: (context, index) {
-          final user = userList[index];
-          if (user.username == AccountManager.instance.currentUser.username) return const SizedBox();
-          return _userItem(user);
-        },
-      )
+      body: Column(
+        children: [
+          Expanded(
+            child: FirebaseAnimatedList(
+              controller: cubit.scrollController,
+              query: AccountManager.instance.getListUser(),
+              itemBuilder: (context, snapshot, animation, index) {
+                final json = snapshot.value as Map<dynamic, dynamic>;
+                final user = UserModel.fromJson(json);
+                if (user.username ==
+                    AccountManager.instance.currentUser.username) {
+                  return const SizedBox();
+                }
+                return _userItem(
+                  user: user,
+                  onTap: () {
+                    List<String> users = [
+                      AccountManager.instance.currentUser.username,
+                      user.username
+                    ];
+                    users.sort();
+                    MessageManager.instance.connectRoom(users.join('_'));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(
+                          title: user.name,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 
-  Widget _userItem(UserModel user) {
+  Widget _userItem({required UserModel user, required Function() onTap}) {
     return InkWell(
-      onTap: () {
-        List<String> users = [
-          AccountManager.instance.currentUser.username,
-          user.username
-        ];
-        users.sort();
-        MessageManager.instance.connectRoom(users.join('_'));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ChatPage(title: user.name,)),
-        );
-      },
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
             CircleAvatar(
+              radius: 25,
               backgroundColor: Colors.green,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Image.network(
-                    'https://ssl.gstatic.com/docs/common/profile/${user.username}_lg.png'),
+                child: Text(
+                  GetAvatarName(user.name),
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 12),
             Text(
               user.name,
               style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
                   fontWeight: FontWeight.bold,
                   color: Colors.black54),
             )
@@ -72,6 +89,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
 }

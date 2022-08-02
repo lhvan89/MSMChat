@@ -3,6 +3,7 @@ import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/login/login_page.dart';
 import 'package:msmchat/pages/home/home_page.dart';
 import 'package:msmchat/pages/profile/profile_cubit.dart';
+import 'package:msmchat/widgets/widgets.dart';
 
 import '../base_staless_widget.dart';
 
@@ -20,44 +21,37 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
           builder: (context, snapshot) {
             final user = snapshot.data;
             return Container(
+              padding: const EdgeInsets.all(16),
               alignment: Alignment.center,
               child: Column(
                 children: [
-                  const SizedBox(height: 24),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
-                        SizedBox(width: 24),
-                        Text('Switch account',
-                            style:
-                                TextStyle(fontSize: 17, color: Colors.green)),
-                        SizedBox(width: 4),
-                        Icon(Icons.change_circle, color: Colors.green),
-                        SizedBox(width: 24),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.logout, color: Colors.green),
+                      )
+                    ],
                   ),
                   const SizedBox(height: 32),
                   if (user != null)
                     CircleAvatar(
                       backgroundColor: Colors.green,
-                      radius: 50,
+                      radius: 60,
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Image.network(
-                            'https://ssl.gstatic.com/docs/common/profile/${user.username}_lg.png'),
+                        child: Text(
+                          GetAvatarName(user.name),
+                          style: const TextStyle(fontSize: 50),
+                        ),
                       ),
                     ),
                   const SizedBox(height: 16),
                   Text(
-                    user?.name ?? '',
+                    user?.name.toUpperCase() ?? '',
                     style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -71,7 +65,7 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomePage(),
+                          builder: (context) => HomePage(),
                         ),
                       );
                     },

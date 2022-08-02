@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:msmchat/pages/profile/profile_page.dart';
-
-import 'manager/account_manager.dart';
+import 'package:msmchat/pages/login/login_page.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  AccountManager.instance.currentUser = (AccountManager.instance.userList.toList()..shuffle()).first;
   runApp(const MainApp());
 }
 
@@ -15,7 +11,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ProfilePage(),
+      home: LoginPage(),
     );
   }
 }
