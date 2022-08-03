@@ -20,16 +20,15 @@ class RegisterAccountPage extends BaseStatelessWidget<RegisterAccountCubit> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Image.asset('assets/images/default_avatar.png',
-                    color: AppColor.primaryColor),
+            const Text(
+              'NHẬP THÔNG TIN ĐĂNG KÝ',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 32),
               decoration: BoxDecoration(

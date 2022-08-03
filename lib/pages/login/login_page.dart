@@ -21,7 +21,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 60,
+              radius: 50,
               backgroundColor: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
@@ -31,7 +31,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
             ),
             const SizedBox(height: 32),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 32),
+              margin: const EdgeInsets.symmetric(horizontal:32),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.blue),
                   borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -39,7 +39,6 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
               padding: const EdgeInsets.all(32),
               child: Column(
                 children: [
-                  const SizedBox(height: 16),
                   TextField(
                     controller: cubit.usernameController,
                     decoration: const InputDecoration(
@@ -51,7 +50,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
                     style: const TextStyle(fontSize: 18),
                     textInputAction: TextInputAction.next,
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
                   TextField(
                     controller: cubit.passwordController,
                     decoration: const InputDecoration(
@@ -64,7 +63,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
                     textInputAction: TextInputAction.next,
                     obscureText: true,
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 32),
                   Row(
                     children: [
                       InkWell(
