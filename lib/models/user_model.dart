@@ -1,15 +1,21 @@
 class UserModel {
   String username;
+  String password;
   String name;
 
-  UserModel(this.username, this.name);
+  UserModel(this.username, this.password, this.name);
 
-  UserModel.fromJson(Map<dynamic, dynamic> json)
-      : username = json['username'] as String,
-        name = json['name'] as String;
+  factory UserModel.fromJson(Map<dynamic, dynamic> json) {
+    return UserModel(
+      json['username'] as String,
+      json['password'] as String,
+      json['name'] as String,
+    );
+  }
 
   Map<dynamic, dynamic> toJson() => <dynamic, dynamic>{
-    'username': username,
-    'name': name,
-  };
+        'username': username,
+        'password': password,
+        'name': name,
+      };
 }

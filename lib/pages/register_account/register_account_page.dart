@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:msmchat/pages/base_staless_widget.dart';
-import 'package:msmchat/pages/login/login_cubit.dart';
-import 'package:msmchat/pages/register_account/register_account_page.dart';
+import 'package:msmchat/pages/register_account/register_account_cubit.dart';
 import 'package:msmchat/utils/app_color.dart';
 
-class LoginPage extends BaseStatelessWidget<LoginCubit> {
-  LoginPage({Key? key}) : super(key: key, cubit: LoginCubit());
+class RegisterAccountPage extends BaseStatelessWidget<RegisterAccountCubit> {
+  RegisterAccountPage({Key? key})
+      : super(key: key, cubit: RegisterAccountCubit());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const  BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/bg_login.png"),
             fit: BoxFit.cover,
@@ -34,14 +34,14 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.blue),
                 borderRadius: const BorderRadius.all(Radius.circular(16)),
-                color: Colors.white
+                color: Colors.white,
               ),
               padding: const EdgeInsets.all(32),
               child: Column(
                 children: [
                   const SizedBox(height: 16),
                   TextField(
-                    controller: cubit.usernameController..text = 'lhvan89',
+                    controller: cubit.usernameController,
                     decoration: const InputDecoration(
                       hintText: 'username',
                       labelText: 'Username',
@@ -64,27 +64,38 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
                     textInputAction: TextInputAction.next,
                     obscureText: true,
                   ),
+                  const SizedBox(height: 32),
+                  TextField(
+                    controller: cubit.hoTenController,
+                    decoration: const InputDecoration(
+                        hintText: 'full name',
+                        labelText: 'Full name',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(8)),
+                    style: const TextStyle(fontSize: 18),
+                    onSubmitted: (text) {
+                      cubit.getAvatarName();
+                    },
+                  ),
                   const SizedBox(height: 40),
                   Row(
                     children: [
-                      InkWell(
-                        child: const Text(
-                          'Đăng ký',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => RegisterAccountPage(),
-                          ),);
+                      ElevatedButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
                         },
+                        child: const Text('HỦY'),
+                        style: ElevatedButton.styleFrom(
+                            shape: const StadiumBorder(), primary: Colors.grey),
                       ),
                       const Spacer(),
                       ElevatedButton(
-                        onPressed: () {
-                          cubit.logIn(context);
+                        onPressed: () async {
+                          await cubit.signUp(context);
                         },
-                        child: const Text('ĐĂNG NHẬP'),
-                        style: ElevatedButton.styleFrom(shape: StadiumBorder(), primary: AppColor.primaryColor),
+                        child: const Text('ĐĂNG KÝ'),
+                        style: ElevatedButton.styleFrom(
+                            shape: const StadiumBorder(), primary: AppColor.primaryColor),
                       )
                     ],
                   )

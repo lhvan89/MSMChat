@@ -8,15 +8,36 @@ class AccountManager {
   static final AccountManager instance = AccountManager._instance();
 
   static DatabaseReference databaseReference = FirebaseDatabase.instance.reference().child('users');
+  List<UserModel> listUser = [];
+  UserModel currentUser = UserModel('', '', '');
+
+  Future<void> getListAccount() async {
+    listUser = [];
+    final snapshot = await databaseReference.get();
+    if (snapshot?.value != null) {
+      print((snapshot?.value).toString());
+      final map = snapshot?.value as Map<dynamic, dynamic>;
+
+      // print(snapshot);
+      map.forEach((key, value) {
+        UserModel user = UserModel.fromJson(value);
+        listUser.add(user);
+        print(user.username);
+      });
+    }
+
+
+  }
 
   Query getListUser() {
     return databaseReference;
   }
 
-  Future<void> saveUser(UserModel user) async {
+  Future<void> registerUser(UserModel user) async {
     if (user.username.isEmpty || user.name.isEmpty) return;
     await databaseReference.push().set(user.toJson());
+    // currentUser = user;
   }
 
-  UserModel currentUser = UserModel('lhvan89', 'Lê Hồng Vấn');
+
 }

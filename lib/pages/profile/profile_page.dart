@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:msmchat/manager/account_manager.dart';
 import 'package:msmchat/models/user_model.dart';
-import 'package:msmchat/pages/login/login_page.dart';
 import 'package:msmchat/pages/home/home_page.dart';
 import 'package:msmchat/pages/profile/profile_cubit.dart';
 import 'package:msmchat/widgets/widgets.dart';
@@ -8,72 +8,58 @@ import 'package:msmchat/widgets/widgets.dart';
 import '../base_staless_widget.dart';
 
 class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
-  ProfilePage({Key? key}) : super(key: key, cubit: ProfileCubit());
+
+  ProfilePage({Key? key, required UserModel currentUser}) : super(key: key, cubit: ProfileCubit(currentUser: currentUser));
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = cubit.currentUser;
     return Scaffold(
       appBar: AppBar(
         title: const Text('PROFILE'),
+        // actions: [Icon(Icons.logout, color: Colors.white), SizedBox(width: 8)],
       ),
-      body: StreamBuilder<UserModel>(
-          stream: cubit.userStream,
-          builder: (context, snapshot) {
-            final user = snapshot.data;
-            return Container(
-              padding: const EdgeInsets.all(16),
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.logout, color: Colors.green),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-                  if (user != null)
-                    CircleAvatar(
-                      backgroundColor: Colors.green,
-                      radius: 60,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          GetAvatarName(user.name),
-                          style: const TextStyle(fontSize: 50),
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 16),
-                  Text(
-                    user?.name.toUpperCase() ?? '',
-                    style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54),
-                  ),
-                  const SizedBox(height: 40),
-                  _button(
-                    context: context,
-                    title: 'HOME PAGE',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            const SizedBox(height: 32),
+            CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 60,
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  GetAvatarName(currentUser.name),
+                  style: const TextStyle(fontSize: 50),
+                ),
               ),
-            );
-          }),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              currentUser.name.toUpperCase(),
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54),
+            ),
+            const SizedBox(height: 40),
+            _button(
+              context: context,
+              title: 'HOME PAGE',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
