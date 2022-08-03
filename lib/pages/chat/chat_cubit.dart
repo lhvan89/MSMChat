@@ -23,7 +23,7 @@ class ChatCubit extends BaseCubit {
     super.initCubit();
     getMessages();
 
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       jumpToBottom();
     });
   }
@@ -54,7 +54,7 @@ class ChatCubit extends BaseCubit {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
         curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 60),
+        duration: const Duration(milliseconds: 300),
       );
     }
   }

@@ -16,6 +16,7 @@ class HomePage extends BaseStatelessWidget<HomeCubit> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('LIST USER'),
+        backgroundColor: AppColor.primaryColor,
       ),
       body: Column(
         children: [

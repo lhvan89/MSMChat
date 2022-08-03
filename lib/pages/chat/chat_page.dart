@@ -22,6 +22,7 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title?.toUpperCase() ?? ''),
+        backgroundColor: AppColor.primaryColor,
       ),
       body: SafeArea(
         child: Column(

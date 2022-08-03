@@ -18,6 +18,7 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('PROFILE'),
+        backgroundColor: AppColor.primaryColor,
         // actions: [Icon(Icons.logout, color: Colors.white), SizedBox(width: 8)],
       ),
       body: Container(
