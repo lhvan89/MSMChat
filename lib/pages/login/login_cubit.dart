@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:msmchat/cubit/base_cubit.dart';
 import 'package:msmchat/manager/account_manager.dart';
@@ -47,7 +46,7 @@ class LoginCubit extends BaseCubit {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('AlertDialog Title'),
+          title: const Text('THÔNG BÁO'),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
@@ -57,7 +56,7 @@ class LoginCubit extends BaseCubit {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Approve'),
+              child: const Text('ĐÓNG'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

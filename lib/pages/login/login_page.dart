@@ -11,7 +11,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const  BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/bg_login.png"),
             fit: BoxFit.cover,
@@ -25,17 +25,17 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
               backgroundColor: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Image.asset('assets/images/default_avatar.png', color: AppColor.primaryColor),
+                child: Image.asset('assets/images/default_avatar.png',
+                    color: AppColor.primaryColor),
               ),
             ),
             const SizedBox(height: 32),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 32),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue),
-                borderRadius: const BorderRadius.all(Radius.circular(16)),
-                color: Colors.white
-              ),
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                  color: Colors.white),
               padding: const EdgeInsets.all(32),
               child: Column(
                 children: [
@@ -70,22 +70,31 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
                       InkWell(
                         child: const Text(
                           'Đăng ký',
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: AppColor.greenActiveColor, fontSize: 15, fontStyle: FontStyle.italic),
                         ),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => RegisterAccountPage(),
-                          ),);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterAccountPage(),
+                            ),
+                          );
                         },
                       ),
                       const Spacer(),
-                      ElevatedButton(
-                        onPressed: () {
-                          cubit.logIn(context);
-                        },
-                        child: const Text('ĐĂNG NHẬP'),
-                        style: ElevatedButton.styleFrom(shape: StadiumBorder(), primary: AppColor.primaryColor),
-                      )
+                      SizedBox(
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            cubit.logIn(context);
+                          },
+                          child: const Text('ĐĂNG NHẬP'),
+                          style: ElevatedButton.styleFrom(
+                            shape: StadiumBorder(),
+                            primary: AppColor.primaryColor,
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 ],

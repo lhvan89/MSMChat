@@ -25,7 +25,8 @@ class RegisterAccountPage extends BaseStatelessWidget<RegisterAccountCubit> {
               backgroundColor: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Image.asset('assets/images/default_avatar.png', color: AppColor.primaryColor),
+                child: Image.asset('assets/images/default_avatar.png',
+                    color: AppColor.primaryColor),
               ),
             ),
             const SizedBox(height: 32),
@@ -80,22 +81,32 @@ class RegisterAccountPage extends BaseStatelessWidget<RegisterAccountCubit> {
                   const SizedBox(height: 40),
                   Row(
                     children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('HỦY'),
-                        style: ElevatedButton.styleFrom(
-                            shape: const StadiumBorder(), primary: Colors.grey),
+                      SizedBox(
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('HỦY'),
+                          style: ElevatedButton.styleFrom(
+                            shape: const StadiumBorder(),
+                            primary: Colors.grey,
+                          ),
+                        ),
                       ),
                       const Spacer(),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await cubit.signUp(context);
-                        },
-                        child: const Text('ĐĂNG KÝ'),
-                        style: ElevatedButton.styleFrom(
-                            shape: const StadiumBorder(), primary: AppColor.primaryColor),
+                      SizedBox(
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await cubit.signUp(context);
+                          },
+                          child: const Text('ĐĂNG KÝ'),
+                          style: ElevatedButton.styleFrom(
+                            shape: const StadiumBorder(),
+                            primary: AppColor.primaryColor,
+                          ),
+                        ),
                       )
                     ],
                   )

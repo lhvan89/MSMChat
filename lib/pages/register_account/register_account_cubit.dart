@@ -27,6 +27,7 @@ class RegisterAccountCubit extends BaseCubit {
   }
 
   Future<void> signUp(BuildContext context) async {
+    if (usernameController.text.isEmpty || passwordController.text.isEmpty || hoTenController.text.isEmpty) { return; }
     if (await checkUserExisted()) {
       _showMyDialog(context);
     } else {
@@ -68,7 +69,7 @@ class RegisterAccountCubit extends BaseCubit {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('AlertDialog Title'),
+          title: const Text('THÔNG BÁO'),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
@@ -78,7 +79,7 @@ class RegisterAccountCubit extends BaseCubit {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Approve'),
+              child: const Text('ĐÓNG'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
