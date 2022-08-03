@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:msmchat/cubit/base_cubit.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../manager/account_manager.dart';
 import '../../manager/message_manager.dart';
@@ -7,20 +8,34 @@ import '../../models/message_model.dart';
 import '../../models/user_model.dart';
 
 class ChatCubit extends BaseCubit {
+  UserModel user;
+
+  ChatCubit({required this.user});
+
   TextEditingController messageController = TextEditingController();
   ScrollController scrollController = ScrollController();
 
-  bool _canSendMessage() => messageController.text.length > 0;
+  bool _canSendMessage() => messageController.text.isNotEmpty;
   UserModel currentUser = AccountManager.instance.currentUser;
 
   @override
   void initCubit() {
     super.initCubit();
+    getMessages();
 
-    MessageManager.instance.getMessageQuery();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       jumpToBottom();
     });
+  }
+
+  void getMessages() async {
+    List<String> users = [
+      AccountManager.instance.currentUser.username,
+      user.username
+    ];
+    users.sort();
+    MessageManager.instance.connectRoom(users.join('_'));
+    MessageManager.instance.getMessageQuery();
   }
 
   Future<bool> sendMessage() async {
@@ -35,11 +50,18 @@ class ChatCubit extends BaseCubit {
   }
 
   void jumpToBottom() {
-    if (scrollController.hasClients)
+    if (scrollController.hasClients) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
         curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 50),
+        duration: const Duration(milliseconds: 60),
       );
+    }
+  }
+
+  @override
+  void dispose() {
+    messageController.clear();
+    super.dispose();
   }
 }

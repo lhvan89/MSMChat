@@ -19,5 +19,4 @@ class MessageManager {
   Query getMessageQuery() {
     return databaseReference;
   }
-
 }

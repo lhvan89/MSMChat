@@ -41,7 +41,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
                 children: [
                   const SizedBox(height: 16),
                   TextField(
-                    controller: cubit.usernameController..text = 'lhvan89',
+                    controller: cubit.usernameController,
                     decoration: const InputDecoration(
                       hintText: 'username',
                       labelText: 'Username',

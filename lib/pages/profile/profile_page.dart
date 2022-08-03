@@ -3,6 +3,7 @@ import 'package:msmchat/manager/account_manager.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/home/home_page.dart';
 import 'package:msmchat/pages/profile/profile_cubit.dart';
+import 'package:msmchat/utils/app_color.dart';
 import 'package:msmchat/widgets/widgets.dart';
 
 import '../base_staless_widget.dart';
@@ -26,13 +27,13 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
           children: [
             const SizedBox(height: 32),
             CircleAvatar(
-              backgroundColor: Colors.green,
-              radius: 60,
+              backgroundColor: AppColor.primaryColor,
+              radius: 50,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
                   GetAvatarName(currentUser.name),
-                  style: const TextStyle(fontSize: 50),
+                  style: const TextStyle(fontSize: 40, color: Colors.white),
                 ),
               ),
             ),

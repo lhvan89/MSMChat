@@ -10,10 +10,6 @@ class HomeCubit extends BaseCubit {
     super.initCubit();
   }
 
-  void getListUsers() {
-
-  }
-
   @override
   void dispose() {
     super.dispose();

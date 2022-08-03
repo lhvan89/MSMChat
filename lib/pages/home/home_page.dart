@@ -5,9 +5,8 @@ import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/base_staless_widget.dart';
 import 'package:msmchat/pages/chat/chat_page.dart';
 import 'package:msmchat/pages/home/home_cubit.dart';
+import 'package:msmchat/utils/app_color.dart';
 import 'package:msmchat/widgets/widgets.dart';
-
-import '../../manager/message_manager.dart';
 
 class HomePage extends BaseStatelessWidget<HomeCubit> {
   HomePage({Key? key}) : super(key: key, cubit: HomeCubit());
@@ -16,7 +15,7 @@ class HomePage extends BaseStatelessWidget<HomeCubit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List User'),
+        title: const Text('LIST USER'),
       ),
       body: Column(
         children: [
@@ -34,17 +33,12 @@ class HomePage extends BaseStatelessWidget<HomeCubit> {
                 return _userItem(
                   user: user,
                   onTap: () {
-                    List<String> users = [
-                      AccountManager.instance.currentUser.username,
-                      user.username
-                    ];
-                    users.sort();
-                    MessageManager.instance.connectRoom(users.join('_'));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ChatPage(
                           title: user.name,
+                          user: user,
                         ),
                       ),
                     );
@@ -66,23 +60,37 @@ class HomePage extends BaseStatelessWidget<HomeCubit> {
         child: Row(
           children: [
             CircleAvatar(
-              radius: 25,
-              backgroundColor: Colors.green,
+              radius: 23,
+              backgroundColor: AppColor.primaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
                   GetAvatarName(user.name),
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ),
             const SizedBox(width: 12),
-            Text(
-              user.name,
-              style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black54),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.name,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.secondaryTextColor,
+                  ),
+                ),
+                Text(
+                  user.username,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontStyle: FontStyle.italic,
+                    color: AppColor.primaryDarkColor,
+                  ),
+                )
+              ],
             )
           ],
         ),
