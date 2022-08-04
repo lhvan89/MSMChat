@@ -40,7 +40,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
               child: Column(
                 children: [
                   TextField(
-                    controller: cubit.usernameController,
+                    controller: cubit.usernameController..text = 'lhvan',
                     decoration: const InputDecoration(
                       hintText: 'username',
                       labelText: 'Username',
@@ -52,7 +52,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
                   ),
                   const SizedBox(height: 24),
                   TextField(
-                    controller: cubit.passwordController,
+                    controller: cubit.passwordController..text = '123',
                     decoration: const InputDecoration(
                       hintText: 'password',
                       labelText: 'Password',
