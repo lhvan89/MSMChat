@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:msmchat/cubit/base_cubit.dart';
 import 'package:msmchat/manager/account_manager.dart';
-import '../profile/profile_page.dart';
+import 'package:msmchat/models/user_model.dart';
 
 class LoginCubit extends BaseCubit {
   TextEditingController usernameController = TextEditingController();
@@ -17,10 +17,10 @@ class LoginCubit extends BaseCubit {
   }
 
   Future<bool> checkLogin() async {
-    await AccountManager.instance.getListAccount();
-    for (var element in AccountManager.instance.listUser) {
-      if (element.username == usernameController.text && element.password == passwordController.text) {
-        AccountManager.instance.currentUser = element;
+    List<UserModel> listUser = await AccountManager.instance.getListAccount();
+    for (var user in listUser) {
+      if (user.username == usernameController.text && user.password == passwordController.text) {
+        AccountManager.instance.logIn(user);
         return true;
       }
     }
@@ -29,12 +29,6 @@ class LoginCubit extends BaseCubit {
 
   void logIn(BuildContext context) async {
     if (await checkLogin()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProfilePage(currentUser: AccountManager.instance.currentUser),
-        ),
-      );
     } else {
       _showDialog(context);
     }
@@ -43,7 +37,7 @@ class LoginCubit extends BaseCubit {
   Future<void> _showDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('THÔNG BÁO'),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:msmchat/pages/login/login_page.dart';
-import 'package:msmchat/pages/register_account/register_account_page.dart';
+import 'package:msmchat/pages/splash/splash_page.dart';
 
-void main() {
+void main() async {
   runApp(const MainApp());
 }
 
@@ -11,8 +10,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LoginPage(),
+    return const MaterialApp(
+      home: SplashPage(),
     );
   }
 }

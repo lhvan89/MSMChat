@@ -5,7 +5,7 @@ import 'package:msmchat/manager/account_manager.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/widgets/widgets.dart';
 import 'package:rxdart/rxdart.dart';
-import '../profile/profile_page.dart';
+import '../../event_bus/event_bus.dart';
 
 class RegisterAccountCubit extends BaseCubit {
   TextEditingController usernameController = TextEditingController();
@@ -33,13 +33,7 @@ class RegisterAccountCubit extends BaseCubit {
     } else {
       final user = UserModel(usernameController.text, passwordController.text, hoTenController.text);
       await AccountManager.instance.registerUser(user);
-      AccountManager.instance.currentUser = user;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProfilePage(currentUser: AccountManager.instance.currentUser),
-        ),
-      );
+      eventBus.fire(ReloadUserEvent());
     }
   }
 
@@ -53,15 +47,6 @@ class RegisterAccountCubit extends BaseCubit {
     return false;
   }
 
-  bool signIn() {
-    for (var element in AccountManager.instance.listUser) {
-      if (element.username == usernameController.text && element.password == passwordController.text) {
-        AccountManager.instance.currentUser = element;
-        return true;
-      }
-    }
-    return false;
-  }
 
   Future<void> _showMyDialog(BuildContext context) async {
     return showDialog<void>(

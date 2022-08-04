@@ -72,7 +72,7 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
           final json = snapshot.value as Map<dynamic, dynamic>;
           final message = MessageModel.fromJson(json);
           return _messageWidget(context, message,
-              message.username == AccountManager.instance.currentUser.username);
+              message.username == AccountManager.instance.currentUser?.username);
         },
       ),
     );

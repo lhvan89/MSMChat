@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:msmchat/event_bus/event_bus.dart';
 import 'package:msmchat/manager/account_manager.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/home/home_page.dart';
@@ -9,17 +10,27 @@ import 'package:msmchat/widgets/widgets.dart';
 import '../base_staless_widget.dart';
 
 class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
-
-  ProfilePage({Key? key, required UserModel currentUser}) : super(key: key, cubit: ProfileCubit(currentUser: currentUser));
+  ProfilePage({Key? key, UserModel? currentUser})
+      : super(key: key, cubit: ProfileCubit());
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = cubit.currentUser;
+    final currentUser = AccountManager.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
         title: const Text('PROFILE'),
         backgroundColor: AppColor.primaryColor,
-        // actions: [Icon(Icons.logout, color: Colors.white), SizedBox(width: 8)],
+        actions: [
+          InkWell(
+            onTap: () {
+              AccountManager.instance.logOut();
+            },
+            child: Icon(Icons.logout, color: Colors.white),
+          ),
+          SizedBox(width: 8),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
@@ -33,14 +44,14 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  GetAvatarName(currentUser.name),
+                  GetAvatarName(currentUser?.name ?? ''),
                   style: const TextStyle(fontSize: 40, color: Colors.white),
                 ),
               ),
             ),
             const SizedBox(height: 16),
             Text(
-              currentUser.name.toUpperCase(),
+              currentUser?.name.toUpperCase() ?? '',
               style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

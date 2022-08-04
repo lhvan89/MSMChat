@@ -28,7 +28,7 @@ class HomePage extends BaseStatelessWidget<HomeCubit> {
                 final json = snapshot.value as Map<dynamic, dynamic>;
                 final user = UserModel.fromJson(json);
                 if (user.username ==
-                    AccountManager.instance.currentUser.username) {
+                    AccountManager.instance.currentUser?.username) {
                   return const SizedBox();
                 }
                 return _userItem(

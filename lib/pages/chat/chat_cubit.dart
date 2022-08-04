@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:msmchat/cubit/base_cubit.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../manager/account_manager.dart';
 import '../../manager/message_manager.dart';
@@ -16,7 +15,7 @@ class ChatCubit extends BaseCubit {
   ScrollController scrollController = ScrollController();
 
   bool _canSendMessage() => messageController.text.isNotEmpty;
-  UserModel currentUser = AccountManager.instance.currentUser;
+  UserModel? currentUser = AccountManager.instance.currentUser;
 
   @override
   void initCubit() {
@@ -30,7 +29,7 @@ class ChatCubit extends BaseCubit {
 
   void getMessages() async {
     List<String> users = [
-      AccountManager.instance.currentUser.username,
+      AccountManager.instance.currentUser?.username ?? '',
       user.username
     ];
     users.sort();
@@ -40,7 +39,7 @@ class ChatCubit extends BaseCubit {
 
   Future<bool> sendMessage() async {
     if (_canSendMessage()) {
-      final message = MessageModel(currentUser.username, currentUser.name,
+      final message = MessageModel(currentUser?.username ?? '', currentUser?.name ?? '',
           messageController.text, DateTime.now());
       await MessageManager.instance.saveMessage(message);
       messageController.clear();
