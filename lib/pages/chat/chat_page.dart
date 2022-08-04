@@ -71,10 +71,12 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
         itemBuilder: (context, snapshot, animation, index) {
             final json = snapshot.value as Map<dynamic, dynamic>;
             final message = MessageModel.fromJson(json);
-            if (cubit.scrollController.position.atEdge) {
-              Future.delayed(const Duration(seconds: 1), () {
-                cubit.jumpToBottom();
-              });
+            if (index > 10) {
+              if (cubit.scrollController.position.atEdge) {
+                Future.delayed(const Duration(seconds: 1), () {
+                  cubit.jumpToBottom();
+                });
+              }
             }
             return _messageWidget(context, message, message.username == AccountManager.instance.currentUser?.username);
         },

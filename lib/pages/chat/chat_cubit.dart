@@ -16,8 +16,6 @@ class ChatCubit extends BaseCubit {
 
   bool _canSendMessage() => messageController.text.isNotEmpty;
   UserModel? currentUser = AccountManager.instance.currentUser;
-  bool isLockScroll = false;
-  int lastIndex = 0;
 
   @override
   void initCubit() {
