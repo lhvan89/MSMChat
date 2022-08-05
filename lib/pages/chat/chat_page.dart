@@ -28,19 +28,18 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
           children: [
             Expanded(
               child: StreamBuilder<List<MessageModel>>(
-                stream: cubit.listMessageStream,
-                builder: (context, snapshot) {
-                  List<MessageModel> listMessage = snapshot.data ?? [];
-                  return ListView.builder(
-                    controller: cubit.scrollController,
-                    itemBuilder: (BuildContext context, int index) {
-                      final message = listMessage[index];
-                      return _messageWidget(context, message);
-                    },
-                    itemCount: listMessage.length,
-                  );
-                }
-              ),
+                  stream: cubit.listMessageStream,
+                  builder: (context, snapshot) {
+                    List<MessageModel> listMessage = snapshot.data ?? [];
+                    return ListView.builder(
+                      controller: cubit.scrollController,
+                      itemBuilder: (BuildContext context, int index) {
+                        final message = listMessage[index];
+                        return _messageWidget(context, message);
+                      },
+                      itemCount: listMessage.length,
+                    );
+                  }),
             ),
             const Divider(height: 1),
             Container(
@@ -87,20 +86,21 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
     );
   }
 
-  Widget _messageWidget(
-      BuildContext context, MessageModel message) {
-    final isSend = message.username == AccountManager.instance.currentUser()?.username;
+  Widget _messageWidget(BuildContext context, MessageModel message) {
+    final isSend =
+        message.username == AccountManager.instance.currentUser()?.username;
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          mainAxisAlignment:
-          isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
-          children: [
-            if (!isSend) _avatar(message.name),
-            const SizedBox(width: 10),
-            _messageContent(context, message, isSend),
-          ],
-        ));
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment:
+            isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          if (!isSend) _avatar(message.name),
+          const SizedBox(width: 10),
+          _messageContent(context, message, isSend),
+        ],
+      ),
+    );
   }
 
   Widget _avatar(String fullName) {
@@ -130,7 +130,7 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment:
-        isSend ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            isSend ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           if (isSend == false)
             Text(

@@ -34,9 +34,9 @@ class ChatCubit extends BaseCubit {
 
     MessageManager.instance.connectRoom(users.join('_'));
     getFirebaseMessages();
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       if (scrollController.hasClients){
-        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        jumpToBottom();
       }
     });
   }
@@ -54,7 +54,7 @@ class ChatCubit extends BaseCubit {
         Future.delayed(const Duration(milliseconds: 500), () {
           if (scrollController.hasClients){
             if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 300) {
-              scrollController.jumpTo(scrollController.position.maxScrollExtent);
+              jumpToBottom();
             }
           }
         });
@@ -76,12 +76,12 @@ class ChatCubit extends BaseCubit {
   }
 
   void jumpToBottom() {
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       if (scrollController.hasClients) {
         scrollController.animateTo(
           scrollController.position.maxScrollExtent,
           curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 300),
         );
       }
     });
