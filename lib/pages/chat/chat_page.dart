@@ -16,9 +16,7 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
 
   ChatPage({Key? key, this.title, required UserModel user})
       : super(key: key, cubit: ChatCubit(user: user));
-
-
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
