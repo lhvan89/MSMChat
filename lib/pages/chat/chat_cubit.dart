@@ -15,32 +15,38 @@ class ChatCubit extends BaseCubit {
   ScrollController scrollController = ScrollController();
 
   bool _canSendMessage() => messageController.text.isNotEmpty;
-  UserModel? currentUser = AccountManager.instance.currentUser;
+  UserModel? currentUser = AccountManager.instance.currentUser();
 
   @override
   void initCubit() {
     super.initCubit();
     getMessages();
 
-    Future.delayed(const Duration(milliseconds: 300), () {
-      jumpToBottom();
-    });
+    MessageManager.instance.listenNewMessage(
+      callback: () {
+        if (scrollController.hasClients) {
+          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+            jumpToBottom();
+          }
+        }
+      },
+    );
   }
 
   void getMessages() async {
     List<String> users = [
-      AccountManager.instance.currentUser?.username ?? '',
+      AccountManager.instance.currentUser()?.username ?? '',
       user.username
     ];
     users.sort();
     MessageManager.instance.connectRoom(users.join('_'));
-    MessageManager.instance.getMessageQuery();
+    jumpToBottom();
   }
 
   Future<bool> sendMessage() async {
     if (_canSendMessage()) {
-      final message = MessageModel(currentUser?.username ?? '', currentUser?.name ?? '',
-          messageController.text, DateTime.now());
+      final message = MessageModel(currentUser?.username ?? '',
+          currentUser?.name ?? '', messageController.text, DateTime.now());
       await MessageManager.instance.saveMessage(message);
       messageController.clear();
       return true;
@@ -49,13 +55,11 @@ class ChatCubit extends BaseCubit {
   }
 
   void jumpToBottom() {
-    if (scrollController.hasClients) {
-      scrollController.animateTo(
-        scrollController.position.maxScrollExtent,
-        curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 300),
-      );
-    }
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      }
+    });
   }
 
   @override

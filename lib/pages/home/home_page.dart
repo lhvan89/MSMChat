@@ -23,12 +23,12 @@ class HomePage extends BaseStatelessWidget<HomeCubit> {
           Expanded(
             child: FirebaseAnimatedList(
               controller: cubit.scrollController,
-              query: AccountManager.instance.getListUser(),
+              query: AccountManager.instance.databaseReference,
               itemBuilder: (context, snapshot, animation, index) {
                 final json = snapshot.value as Map<dynamic, dynamic>;
                 final user = UserModel.fromJson(json);
                 if (user.username ==
-                    AccountManager.instance.currentUser?.username) {
+                    AccountManager.instance.currentUser()?.username) {
                   return const SizedBox();
                 }
                 return _userItem(

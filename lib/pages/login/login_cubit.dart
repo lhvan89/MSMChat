@@ -12,10 +12,6 @@ class LoginCubit extends BaseCubit {
     super.initCubit();
   }
 
-  void getListUser() {
-    AccountManager.instance.getListUser();
-  }
-
   Future<bool> checkLogin() async {
     List<UserModel> listUser = await AccountManager.instance.getListAccount();
     for (var user in listUser) {

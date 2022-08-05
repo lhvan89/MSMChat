@@ -6,7 +6,7 @@ class MessageManager {
   MessageManager._instance();
   static final MessageManager instance = MessageManager._instance();
 
-  static DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
+  late DatabaseReference databaseReference;
 
   void connectRoom(String roomCode) {
     databaseReference = FirebaseDatabase.instance.reference().child('messages/$roomCode');
@@ -16,7 +16,11 @@ class MessageManager {
     await databaseReference.push().set(message.toJson());
   }
 
-  Query getMessageQuery() {
-    return databaseReference;
+  void listenNewMessage({required Function() callback}){
+    databaseReference.onValue.listen((event) {
+      if(event.previousSiblingKey == null){
+        callback.call();
+      }
+    });
   }
 }

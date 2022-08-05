@@ -9,17 +9,15 @@ class AccountManager {
   static final AccountManager instance = AccountManager._instance();
 
   late SharedPreferences sharedPreferences;
+  late DatabaseReference databaseReference;
 
   Future initialize() async {
     sharedPreferences = await SharedPreferences.getInstance();
+    databaseReference = FirebaseDatabase.instance.reference().child('users');
   }
 
-  static DatabaseReference databaseReference = FirebaseDatabase.instance.reference().child('users');
-  List<UserModel> listUser = [];
-  UserModel? currentUser;
-
   Future<List<UserModel>> getListAccount() async {
-    listUser = [];
+    List<UserModel> listUser = [];
     final snapshot = await databaseReference.get();
     if (snapshot?.value != null) {
       final map = snapshot?.value as Map<dynamic, dynamic>;
@@ -27,30 +25,40 @@ class AccountManager {
         UserModel user = UserModel.fromJson(value);
         listUser.add(user);
       });
-      return listUser;
     }
-    return [];
-  }
-
-  Query getListUser() {
-    return databaseReference;
+    return listUser;
   }
 
   Future<void> registerUser(UserModel user) async {
     if (user.username.isEmpty || user.name.isEmpty) return;
     await databaseReference.push().set(user.toJson());
-    currentUser = user;
+    logIn(user);
   }
 
   void logIn(UserModel user) {
-    currentUser = user;
+    saveUser(user);
     eventBus.fire(ReloadUserEvent());
   }
 
   void logOut() {
-    currentUser = null;
+    saveUser(null);
     eventBus.fire(ReloadUserEvent());
   }
 
+  void saveUser(UserModel? user) {
+    sharedPreferences.setString('username', user?.username ?? '');
+    sharedPreferences.setString('password', user?.password ?? '');
+    sharedPreferences.setString('name', user?.name ?? '');
+  }
 
+  UserModel? currentUser() {
+    String username = sharedPreferences.getString('username') ?? '';
+    String password = sharedPreferences.getString('password') ?? '';
+    String name = sharedPreferences.getString('name') ?? '';
+
+    if (username.isEmpty || password.isEmpty || name.isEmpty) {
+      return null;
+    }
+    return UserModel(username, password, name);
+  }
 }

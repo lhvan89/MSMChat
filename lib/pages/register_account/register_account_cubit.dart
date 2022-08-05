@@ -18,10 +18,6 @@ class RegisterAccountCubit extends BaseCubit {
     super.initCubit();
   }
 
-  void getListUser() {
-    AccountManager.instance.getListUser();
-  }
-
   void getAvatarName() {
     avatarString.sink.add(GetAvatarName(hoTenController.text));
   }
@@ -38,8 +34,8 @@ class RegisterAccountCubit extends BaseCubit {
   }
 
   Future<bool> checkUserExisted() async {
-    await AccountManager.instance.getListAccount();
-    for (var element in AccountManager.instance.listUser) {
+    List<UserModel> listUser = await AccountManager.instance.getListAccount();
+    for (var element in listUser) {
       if (element.username.toLowerCase() == usernameController.text.toLowerCase()) {
         return true;
       }

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:msmchat/pages/splash/splash_page.dart';
 
+import 'manager/account_manager.dart';
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AccountManager.instance.initialize();
   runApp(const MainApp());
 }
 

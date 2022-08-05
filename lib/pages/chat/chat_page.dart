@@ -17,6 +17,8 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
   ChatPage({Key? key, this.title, required UserModel user})
       : super(key: key, cubit: ChatCubit(user: user));
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +29,17 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
       body: SafeArea(
         child: Column(
           children: [
-            _getMessageList(context),
+            Expanded(
+              child: FirebaseAnimatedList(
+                controller: cubit.scrollController,
+                query: MessageManager.instance.databaseReference,
+                itemBuilder: (context, snapshot, animation, index) {
+                  final json = snapshot.value as Map<dynamic, dynamic>;
+                  final message = MessageModel.fromJson(json);
+                  return _messageWidget(context, message, message.username == AccountManager.instance.currentUser()?.username);
+                },
+              ),
+            ),
             const Divider(height: 1),
             Container(
               color: Colors.white,
@@ -63,48 +75,19 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
     );
   }
 
-  Widget _getMessageList(BuildContext context) {
-    return Expanded(
-      child: FirebaseAnimatedList(
-        controller: cubit.scrollController,
-        query: MessageManager.instance.getMessageQuery(),
-        itemBuilder: (context, snapshot, animation, index) {
-            final json = snapshot.value as Map<dynamic, dynamic>;
-            final message = MessageModel.fromJson(json);
-            if (index > 10) {
-              if (cubit.scrollController.position.atEdge) {
-                Future.delayed(const Duration(seconds: 1), () {
-                  cubit.jumpToBottom();
-                });
-              }
-            }
-            return _messageWidget(context, message, message.username == AccountManager.instance.currentUser?.username);
-        },
-      ),
-    );
-  }
-
   Widget _messageWidget(
       BuildContext context, MessageModel message, bool isMyMessage) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: isMyMessage
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const SizedBox(width: 70),
-                _messageContent(context, message, true),
-              ],
-            )
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _avatar(message.name),
-                const SizedBox(width: 10),
-                _messageContent(context, message, false),
-                const SizedBox(width: 70),
-              ],
-            ),
+      child: Row(
+        mainAxisAlignment: isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          if (!isMyMessage)
+          _avatar(message.name),
+          const SizedBox(width: 10),
+          _messageContent(context, message, isMyMessage),
+        ],
+      )
     );
   }
 

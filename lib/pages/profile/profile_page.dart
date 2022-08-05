@@ -15,7 +15,7 @@ class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = AccountManager.instance.currentUser;
+    final currentUser = AccountManager.instance.currentUser();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

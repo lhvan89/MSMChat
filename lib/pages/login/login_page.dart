@@ -40,7 +40,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
               child: Column(
                 children: [
                   TextField(
-                    controller: cubit.usernameController..text = 'lhvan',
+                    controller: cubit.usernameController,
                     decoration: const InputDecoration(
                       hintText: 'username',
                       labelText: 'Username',
@@ -52,7 +52,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
                   ),
                   const SizedBox(height: 24),
                   TextField(
-                    controller: cubit.passwordController..text = '123',
+                    controller: cubit.passwordController,
                     decoration: const InputDecoration(
                       hintText: 'password',
                       labelText: 'Password',
@@ -69,7 +69,7 @@ class LoginPage extends BaseStatelessWidget<LoginCubit> {
                       InkWell(
                         child: const Text(
                           'Đăng ký',
-                          style: TextStyle(color: AppColor.greenActiveColor, fontSize: 15, fontStyle: FontStyle.italic),
+                          style: TextStyle(color: AppColor.orangeCurrentStepColor, fontSize: 15, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
                         ),
                         onTap: () {
                           Navigator.push(

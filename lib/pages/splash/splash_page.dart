@@ -27,7 +27,7 @@ class _SplashPageState extends State<SplashPage> {
     Future.delayed(const Duration(milliseconds: 0), () {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => AccountManager.instance.currentUser == null ? LoginPage() : ProfilePage(),
+          builder: (context) => AccountManager.instance.currentUser() == null ? LoginPage() : ProfilePage(),
         ),
       );
     });
