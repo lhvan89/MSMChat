@@ -1,4 +1,3 @@
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/base_staless_widget.dart';
@@ -7,7 +6,6 @@ import 'package:msmchat/utils/app_color.dart';
 import 'package:msmchat/widgets/widgets.dart';
 
 import '../../manager/account_manager.dart';
-import '../../manager/message_manager.dart';
 import '../../models/message_model.dart';
 import '../../utils/utils.dart';
 
@@ -16,10 +14,11 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
 
   ChatPage({Key? key, this.title, required UserModel user})
       : super(key: key, cubit: ChatCubit(user: user));
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(title?.toUpperCase() ?? ''),
         backgroundColor: AppColor.primaryColor,
@@ -28,32 +27,47 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
         child: Column(
           children: [
             Expanded(
-              child: FirebaseAnimatedList(
-                controller: cubit.scrollController,
-                query: MessageManager.instance.databaseReference,
-                itemBuilder: (context, snapshot, animation, index) {
-                  final json = snapshot.value as Map<dynamic, dynamic>;
-                  final message = MessageModel.fromJson(json);
-                  return _messageWidget(context, message, message.username == AccountManager.instance.currentUser()?.username);
-                },
+              child: StreamBuilder<List<MessageModel>>(
+                stream: cubit.listMessageStream,
+                builder: (context, snapshot) {
+                  List<MessageModel> listMessage = snapshot.data ?? [];
+                  return ListView.builder(
+                    controller: cubit.scrollController,
+                    itemBuilder: (BuildContext context, int index) {
+                      final message = listMessage[index];
+                      return _messageWidget(context, message);
+                    },
+                    itemCount: listMessage.length,
+                  );
+                }
               ),
             ),
             const Divider(height: 1),
             Container(
+              padding: const EdgeInsets.all(8),
               color: Colors.white,
               child: Row(
                 children: [
-                  const SizedBox(
-                    width: 16,
-                  ),
                   Expanded(
-                    child:
-                    TextFormField(
+                      child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: const BoxDecoration(
+                        color: AppColor.disableFieldColor,
+                        borderRadius: BorderRadius.all(Radius.circular(16))),
+                    child: TextFormField(
                       controller: cubit.messageController,
                       maxLines: 5,
                       minLines: 1,
-                    )
-                  ),
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                      ),
+                    ),
+                  )),
                   IconButton(
                     onPressed: () async {
                       await cubit.sendMessage();
@@ -74,19 +88,19 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
   }
 
   Widget _messageWidget(
-      BuildContext context, MessageModel message, bool isMyMessage) {
+      BuildContext context, MessageModel message) {
+    final isSend = message.username == AccountManager.instance.currentUser()?.username;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        mainAxisAlignment: isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (!isMyMessage)
-          _avatar(message.name),
-          const SizedBox(width: 10),
-          _messageContent(context, message, isMyMessage),
-        ],
-      )
-    );
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          mainAxisAlignment:
+          isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
+          children: [
+            if (!isSend) _avatar(message.name),
+            const SizedBox(width: 10),
+            _messageContent(context, message, isSend),
+          ],
+        ));
   }
 
   Widget _avatar(String fullName) {
@@ -103,10 +117,10 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
   }
 
   Widget _messageContent(
-      BuildContext context, MessageModel message, bool isMyMessage) {
+      BuildContext context, MessageModel message, bool isSend) {
     return Container(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width - (isMyMessage ? 102 : 153),
+        maxWidth: MediaQuery.of(context).size.width - (isSend ? 102 : 153),
       ),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
@@ -116,15 +130,15 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment:
-            isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        isSend ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          if (isMyMessage == false)
+          if (isSend == false)
             Text(
               message.name,
               style: const TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.black54),
             ),
-          const SizedBox(height: 8),
+          if (isSend == false) const SizedBox(height: 8),
           Text(
             message.text,
             style: const TextStyle(

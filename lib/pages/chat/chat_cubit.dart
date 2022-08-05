@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:msmchat/cubit/base_cubit.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../manager/account_manager.dart';
 import '../../manager/message_manager.dart';
@@ -13,34 +14,52 @@ class ChatCubit extends BaseCubit {
 
   TextEditingController messageController = TextEditingController();
   ScrollController scrollController = ScrollController();
+  BehaviorSubject<List<MessageModel>> listMessageStream = BehaviorSubject();
 
   bool _canSendMessage() => messageController.text.isNotEmpty;
   UserModel? currentUser = AccountManager.instance.currentUser();
 
   @override
-  void initCubit() {
+  void initCubit()  {
     super.initCubit();
-    getMessages();
-
-    MessageManager.instance.listenNewMessage(
-      callback: () {
-        if (scrollController.hasClients) {
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
-            jumpToBottom();
-          }
-        }
-      },
-    );
+    getConversation();
   }
 
-  void getMessages() async {
+  void getConversation() {
     List<String> users = [
-      AccountManager.instance.currentUser()?.username ?? '',
+      currentUser?.username ?? '',
       user.username
     ];
     users.sort();
+
     MessageManager.instance.connectRoom(users.join('_'));
-    jumpToBottom();
+    getFirebaseMessages();
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (scrollController.hasClients){
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      }
+    });
+  }
+
+  void getFirebaseMessages() {
+    MessageManager.instance.databaseReference.onValue.listen((event) {
+      if(event.previousSiblingKey == null){
+        List<MessageModel> listMessage = [];
+        final map = event.snapshot.value as Map<dynamic, dynamic>;
+        map.forEach((key, value) {
+          MessageModel message = MessageModel.fromJson(value);
+          listMessage.add(message);
+        });
+        listMessageStream.sink.add(listMessage);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (scrollController.hasClients){
+            if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 300) {
+              scrollController.jumpTo(scrollController.position.maxScrollExtent);
+            }
+          }
+        });
+      }
+    });
   }
 
   Future<bool> sendMessage() async {
@@ -50,14 +69,20 @@ class ChatCubit extends BaseCubit {
       await MessageManager.instance.saveMessage(message);
       messageController.clear();
       return true;
+    } else {
+      jumpToBottom();
     }
     return false;
   }
 
   void jumpToBottom() {
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       if (scrollController.hasClients) {
-        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 100),
+        );
       }
     });
   }
