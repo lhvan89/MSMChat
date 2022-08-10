@@ -35,9 +35,10 @@ class ChatCubit extends BaseCubit {
     MessageManager.instance.connectRoom(users.join('_'));
     getFirebaseMessages();
     Future.delayed(const Duration(milliseconds: 300), () {
-      if (scrollController.hasClients){
         jumpToBottom();
-      }
+        Future.delayed(const Duration(milliseconds: 300), () {
+          jumpToBottom();
+        });
     });
   }
 
@@ -52,10 +53,8 @@ class ChatCubit extends BaseCubit {
         });
         listMessageStream.sink.add(listMessage);
         Future.delayed(const Duration(milliseconds: 500), () {
-          if (scrollController.hasClients){
-            if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 300) {
-              jumpToBottom();
-            }
+          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 300) {
+            jumpToBottom();
           }
         });
       }
@@ -75,16 +74,10 @@ class ChatCubit extends BaseCubit {
     return false;
   }
 
-  void jumpToBottom() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 300),
-        );
-      }
-    });
+  void jumpToBottom() async {
+    if (scrollController.hasClients) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    }
   }
 
   @override
