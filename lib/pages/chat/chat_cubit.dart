@@ -15,6 +15,7 @@ class ChatCubit extends BaseCubit {
   TextEditingController messageController = TextEditingController();
   ScrollController scrollController = ScrollController();
   BehaviorSubject<List<MessageModel>> listMessageStream = BehaviorSubject();
+  BehaviorSubject<bool> isGotNewMessage = BehaviorSubject();
 
   bool _canSendMessage() => messageController.text.isNotEmpty;
   UserModel? currentUser = AccountManager.instance.currentUser();
@@ -23,6 +24,11 @@ class ChatCubit extends BaseCubit {
   void initCubit()  {
     super.initCubit();
     getConversation();
+    scrollController.addListener(() {
+      if(scrollController.position.atEdge && scrollController.position.pixels != 0) {
+        isGotNewMessage.sink.add(false);
+      }
+    });
   }
 
   void getConversation() {
@@ -34,11 +40,8 @@ class ChatCubit extends BaseCubit {
 
     MessageManager.instance.connectRoom(users.join('_'));
     getFirebaseMessages();
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
         jumpToBottom();
-        Future.delayed(const Duration(milliseconds: 300), () {
-          jumpToBottom();
-        });
     });
   }
 
@@ -52,9 +55,11 @@ class ChatCubit extends BaseCubit {
           listMessage.add(message);
         });
         listMessageStream.sink.add(listMessage);
-        Future.delayed(const Duration(milliseconds: 500), () {
+        Future.delayed(const Duration(milliseconds: 300), () {
           if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 300) {
             jumpToBottom();
+          } else {
+            isGotNewMessage.sink.add(true);
           }
         });
       }
@@ -74,15 +79,17 @@ class ChatCubit extends BaseCubit {
     return false;
   }
 
-  void jumpToBottom() async {
+  void jumpToBottom() {
     if (scrollController.hasClients) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      isGotNewMessage.sink.add(false);
     }
   }
 
   @override
   void dispose() {
     messageController.clear();
+    isGotNewMessage.close();
     super.dispose();
   }
 }

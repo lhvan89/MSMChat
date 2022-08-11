@@ -27,19 +27,44 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
         child: Column(
           children: [
             Expanded(
-              child: StreamBuilder<List<MessageModel>>(
-                  stream: cubit.listMessageStream,
-                  builder: (context, snapshot) {
-                    List<MessageModel> listMessage = snapshot.data ?? [];
-                    return ListView.builder(
-                      controller: cubit.scrollController,
-                      itemBuilder: (BuildContext context, int index) {
-                        final message = listMessage[index];
-                        return _messageWidget(context, message);
-                      },
-                      itemCount: listMessage.length,
-                    );
-                  }),
+              child: Stack(
+                children: [
+                  StreamBuilder<List<MessageModel>>(
+                    stream: cubit.listMessageStream,
+                    builder: (context, snapshot) {
+                      List<MessageModel> listMessage = snapshot.data ?? [];
+                      return ListView.builder(
+                        controller: cubit.scrollController,
+                        itemBuilder: (BuildContext context, int index) {
+                          final message = listMessage[index];
+                          return _messageWidget(context, message);
+                        },
+                        itemCount: listMessage.length,
+                      );
+                    },
+                  ),
+
+                  StreamBuilder<bool>(
+                    stream: cubit.isGotNewMessage,
+                    builder: (context, snapshot) {
+                      final isGetNewMessage = snapshot.data ?? false;
+                      return isGetNewMessage ? Positioned(
+                        child: InkWell(
+                          child: const CircleAvatar(
+                            backgroundColor: AppColor.greenActiveColor,
+                            child: Icon(Icons.arrow_downward, color: AppColor.whiteColor,),
+                          ),
+                          onTap: () {
+                            cubit.jumpToBottom();
+                          },
+                        ),
+                        bottom: 10,
+                        right: 10,
+                      ) : const SizedBox();
+                    }
+                  ),
+                ],
+              ),
             ),
             const Divider(height: 1),
             Container(
@@ -147,7 +172,7 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
           ),
           const SizedBox(height: 8),
           Text(
-            convertDateToString(message.date, 'HH:mm'),
+            convertDateToString(message.date, message.date.day < DateTime.now().day ? 'dd/MM/yyyy HH:mm' : 'HH:mm'),
             style: const TextStyle(color: Colors.black45, fontSize: 12),
             textAlign: TextAlign.right,
           )
