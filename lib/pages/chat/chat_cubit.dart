@@ -14,57 +14,42 @@ class ChatCubit extends BaseCubit {
 
   TextEditingController messageController = TextEditingController();
   ScrollController scrollController = ScrollController();
-  BehaviorSubject<List<MessageModel>> listMessageStream = BehaviorSubject();
   BehaviorSubject<bool> isGotNewMessage = BehaviorSubject();
   BehaviorSubject<bool> canSendMessage = BehaviorSubject();
 
   UserModel? currentUser = AccountManager.instance.currentUser();
 
   @override
-  void initCubit()  {
+  void initCubit() {
     super.initCubit();
     getConversation();
 
     scrollController.addListener(() {
-      if(scrollController.position.atEdge && scrollController.position.pixels != 0) {
+      if (scrollController.position.atEdge &&
+          scrollController.position.pixels != 0) {
         isGotNewMessage.sink.add(false);
+      }
+    });
+
+    MessageManager.instance.listenNewMessage(callback: (event) {
+      if (scrollController.hasClients) {
+        if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 300) {
+          jumpToBottom();
+        } else {
+          isGotNewMessage.sink.add(true);
+        }
       }
     });
   }
 
   void getConversation() {
-    List<String> users = [
-      currentUser?.username ?? '',
-      user.username
-    ];
+    List<String> users = [currentUser?.username ?? '', user.username];
     users.sort();
 
     MessageManager.instance.connectRoom(users.join('_'));
-    getFirebaseMessages();
     Future.delayed(const Duration(seconds: 1), () {
       jumpToBottom();
-    });
-
-  }
-
-  void getFirebaseMessages() {
-    MessageManager.instance.listenNewMessage(callback: (event) {
-      List<MessageModel> listMessage = [];
-      final map = event.snapshot.value as Map<dynamic, dynamic>;
-      map.forEach((key, value) {
-        MessageModel message = MessageModel.fromJson(value);
-        listMessage.add(message);
-      });
-      listMessageStream.sink.add(listMessage);
-      Future.delayed(const Duration(milliseconds: 300), () {
-        if (scrollController.hasClients) {
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 300) {
-            jumpToBottom();
-          } else {
-            isGotNewMessage.sink.add(true);
-          }
-        }
-      });
     });
   }
 
@@ -83,7 +68,8 @@ class ChatCubit extends BaseCubit {
   void jumpToBottom() {
     Future.delayed(const Duration(milliseconds: 100), () {
       if (scrollController.hasClients) {
-        if (scrollController.position.atEdge && scrollController.position.pixels != 0) {
+        if (scrollController.position.atEdge &&
+            scrollController.position.pixels != 0) {
           isGotNewMessage.sink.add(false);
           return;
         }

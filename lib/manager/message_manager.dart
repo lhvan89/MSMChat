@@ -6,18 +6,22 @@ class MessageManager {
   MessageManager._instance();
   static final MessageManager instance = MessageManager._instance();
 
-  late DatabaseReference databaseReference;
+  DatabaseReference _databaseReference = FirebaseDatabase.instance.reference();
 
   void connectRoom(String roomCode) {
-    databaseReference = FirebaseDatabase.instance.reference().child('messages/$roomCode');
+    _databaseReference = FirebaseDatabase.instance.reference().child('messages/$roomCode');
   }
 
   Future<void> saveMessage(MessageModel message) async {
-    await databaseReference.push().set(message.toJson());
+    await _databaseReference.push().set(message.toJson());
+  }
+
+  Query getQueryMessage() {
+    return _databaseReference;
   }
 
   void listenNewMessage({required Function(Event event) callback}){
-    databaseReference.onValue.listen((event) {
+    _databaseReference.onValue.listen((event) {
       if(event.previousSiblingKey == null){
         callback.call(event);
       }

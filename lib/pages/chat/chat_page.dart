@@ -1,3 +1,4 @@
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/base_staless_widget.dart';
@@ -6,6 +7,7 @@ import 'package:msmchat/utils/app_color.dart';
 import 'package:msmchat/widgets/widgets.dart';
 
 import '../../manager/account_manager.dart';
+import '../../manager/message_manager.dart';
 import '../../models/message_model.dart';
 import '../../utils/utils.dart';
 
@@ -29,40 +31,38 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
             Expanded(
               child: Stack(
                 children: [
-                  StreamBuilder<List<MessageModel>>(
-                    stream: cubit.listMessageStream,
-                    builder: (context, snapshot) {
-                      List<MessageModel> listMessage = snapshot.data ?? [];
-                      return ListView.builder(
-                        controller: cubit.scrollController,
-                        itemBuilder: (BuildContext context, int index) {
-                          final message = listMessage[index];
-                          return _messageWidget(context, message);
-                        },
-                        itemCount: listMessage.length,
-                      );
+                  FirebaseAnimatedList(
+                    controller: cubit.scrollController,
+                    query: MessageManager.instance.getQueryMessage(),
+                    itemBuilder: (context, snapshot, animation, index) {
+                      final json = snapshot.value as Map<dynamic, dynamic>;
+                      final message = MessageModel.fromJson(json);
+                      return _messageWidget(context, message);
                     },
                   ),
-
                   StreamBuilder<bool>(
-                    stream: cubit.isGotNewMessage,
-                    builder: (context, snapshot) {
-                      final isGetNewMessage = snapshot.data ?? false;
-                      return isGetNewMessage ? Positioned(
-                        child: InkWell(
-                          child: const CircleAvatar(
-                            backgroundColor: AppColor.greenActiveColor,
-                            child: Icon(Icons.arrow_downward, color: AppColor.whiteColor,),
-                          ),
-                          onTap: () {
-                            cubit.jumpToBottom();
-                          },
-                        ),
-                        bottom: 10,
-                        right: 10,
-                      ) : const SizedBox();
-                    }
-                  ),
+                      stream: cubit.isGotNewMessage,
+                      builder: (context, snapshot) {
+                        final isGetNewMessage = snapshot.data ?? false;
+                        return isGetNewMessage
+                            ? Positioned(
+                                child: InkWell(
+                                  child: const CircleAvatar(
+                                    backgroundColor: AppColor.greenActiveColor,
+                                    child: Icon(
+                                      Icons.arrow_downward,
+                                      color: AppColor.whiteColor,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    cubit.jumpToBottom();
+                                  },
+                                ),
+                                bottom: 10,
+                                right: 10,
+                              )
+                            : const SizedBox();
+                      }),
                 ],
               ),
             ),
@@ -96,24 +96,23 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
                     ),
                   )),
                   StreamBuilder<bool>(
-                    stream: cubit.canSendMessage,
-                    builder: (context, snapshot) {
-                      final canSendMessage = snapshot.data ?? false;
-                      return IconButton(
-                        iconSize: 20,
-                        onPressed: () {
-                          if (canSendMessage) {
-                            cubit.sendMessage();
-                          }
-                        },
-                        icon: Icon(
-                          Icons.send,
-                          color: canSendMessage ? Colors.blue : Colors.grey,
-                          // size: 16,
-                        ),
-                      );
-                    }
-                  ),
+                      stream: cubit.canSendMessage,
+                      builder: (context, snapshot) {
+                        final canSendMessage = snapshot.data ?? false;
+                        return IconButton(
+                          iconSize: 20,
+                          onPressed: () {
+                            if (canSendMessage) {
+                              cubit.sendMessage();
+                            }
+                          },
+                          icon: Icon(
+                            Icons.send,
+                            color: canSendMessage ? Colors.blue : Colors.grey,
+                            // size: 16,
+                          ),
+                        );
+                      }),
                 ],
               ),
             )
@@ -188,7 +187,11 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
           ),
           const SizedBox(height: 8),
           Text(
-            convertDateToString(message.date, message.date.day < DateTime.now().day ? 'dd/MM/yy HH:mm' : 'HH:mm'),
+            convertDateToString(
+                message.date,
+                message.date.day < DateTime.now().day
+                    ? 'dd/MM/yy HH:mm'
+                    : 'HH:mm'),
             style: const TextStyle(color: Colors.black45, fontSize: 12),
             textAlign: TextAlign.right,
           )
