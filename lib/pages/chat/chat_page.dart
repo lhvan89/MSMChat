@@ -90,17 +90,29 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
                       ),
+                      onChanged: (value) {
+                        cubit.validateSendButton(value);
+                      },
                     ),
                   )),
-                  IconButton(
-                    onPressed: () async {
-                      await cubit.sendMessage();
-                      cubit.jumpToBottom();
-                    },
-                    icon: const Icon(
-                      Icons.send,
-                      color: Colors.blue,
-                    ),
+                  StreamBuilder<bool>(
+                    stream: cubit.canSendMessage,
+                    builder: (context, snapshot) {
+                      final canSendMessage = snapshot.data ?? false;
+                      return IconButton(
+                        iconSize: 20,
+                        onPressed: () {
+                          if (canSendMessage) {
+                            cubit.sendMessage();
+                          }
+                        },
+                        icon: Icon(
+                          Icons.send,
+                          color: canSendMessage ? Colors.blue : Colors.grey,
+                          // size: 16,
+                        ),
+                      );
+                    }
                   ),
                 ],
               ),
@@ -119,6 +131,7 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
       child: Row(
         mainAxisAlignment:
             isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isSend) _avatar(message.name),
           const SizedBox(width: 10),
@@ -129,13 +142,16 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
   }
 
   Widget _avatar(String fullName) {
-    return CircleAvatar(
-      backgroundColor: AppColor.primaryColor,
-      child: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Text(
-          GetAvatarName(fullName).toUpperCase(),
-          style: const TextStyle(color: Colors.white),
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      child: CircleAvatar(
+        backgroundColor: AppColor.primaryColor,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Text(
+            GetAvatarName(fullName).toUpperCase(),
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );
@@ -172,7 +188,7 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
           ),
           const SizedBox(height: 8),
           Text(
-            convertDateToString(message.date, message.date.day < DateTime.now().day ? 'dd/MM/yyyy HH:mm' : 'HH:mm'),
+            convertDateToString(message.date, message.date.day < DateTime.now().day ? 'dd/MM/yy HH:mm' : 'HH:mm'),
             style: const TextStyle(color: Colors.black45, fontSize: 12),
             textAlign: TextAlign.right,
           )

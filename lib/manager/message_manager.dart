@@ -16,10 +16,10 @@ class MessageManager {
     await databaseReference.push().set(message.toJson());
   }
 
-  void listenNewMessage({required Function() callback}){
+  void listenNewMessage({required Function(Event event) callback}){
     databaseReference.onValue.listen((event) {
       if(event.previousSiblingKey == null){
-        callback.call();
+        callback.call(event);
       }
     });
   }

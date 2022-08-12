@@ -16,14 +16,15 @@ class ChatCubit extends BaseCubit {
   ScrollController scrollController = ScrollController();
   BehaviorSubject<List<MessageModel>> listMessageStream = BehaviorSubject();
   BehaviorSubject<bool> isGotNewMessage = BehaviorSubject();
+  BehaviorSubject<bool> canSendMessage = BehaviorSubject();
 
-  bool _canSendMessage() => messageController.text.isNotEmpty;
   UserModel? currentUser = AccountManager.instance.currentUser();
 
   @override
   void initCubit()  {
     super.initCubit();
     getConversation();
+
     scrollController.addListener(() {
       if(scrollController.position.atEdge && scrollController.position.pixels != 0) {
         isGotNewMessage.sink.add(false);
@@ -40,56 +41,63 @@ class ChatCubit extends BaseCubit {
 
     MessageManager.instance.connectRoom(users.join('_'));
     getFirebaseMessages();
-    Future.delayed(const Duration(milliseconds: 500), () {
-        jumpToBottom();
+    Future.delayed(const Duration(seconds: 1), () {
+      jumpToBottom();
     });
+
   }
 
   void getFirebaseMessages() {
-    MessageManager.instance.databaseReference.onValue.listen((event) {
-      if(event.previousSiblingKey == null){
-        List<MessageModel> listMessage = [];
-        final map = event.snapshot.value as Map<dynamic, dynamic>;
-        map.forEach((key, value) {
-          MessageModel message = MessageModel.fromJson(value);
-          listMessage.add(message);
-        });
-        listMessageStream.sink.add(listMessage);
-        Future.delayed(const Duration(milliseconds: 300), () {
+    MessageManager.instance.listenNewMessage(callback: (event) {
+      List<MessageModel> listMessage = [];
+      final map = event.snapshot.value as Map<dynamic, dynamic>;
+      map.forEach((key, value) {
+        MessageModel message = MessageModel.fromJson(value);
+        listMessage.add(message);
+      });
+      listMessageStream.sink.add(listMessage);
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (scrollController.hasClients) {
           if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 300) {
             jumpToBottom();
           } else {
             isGotNewMessage.sink.add(true);
           }
-        });
-      }
+        }
+      });
     });
   }
 
-  Future<bool> sendMessage() async {
-    if (_canSendMessage()) {
-      final message = MessageModel(currentUser?.username ?? '',
-          currentUser?.name ?? '', messageController.text, DateTime.now());
-      await MessageManager.instance.saveMessage(message);
-      messageController.clear();
-      return true;
-    } else {
-      jumpToBottom();
-    }
-    return false;
+  void sendMessage() {
+    final message = MessageModel(currentUser?.username ?? '',
+        currentUser?.name ?? '', messageController.text, DateTime.now());
+    MessageManager.instance.saveMessage(message);
+    messageController.clear();
+    canSendMessage.sink.add(false);
+  }
+
+  void validateSendButton(String message) {
+    canSendMessage.sink.add(message.trim().isNotEmpty);
   }
 
   void jumpToBottom() {
-    if (scrollController.hasClients) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
-      isGotNewMessage.sink.add(false);
-    }
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (scrollController.hasClients) {
+        if (scrollController.position.atEdge && scrollController.position.pixels != 0) {
+          isGotNewMessage.sink.add(false);
+          return;
+        }
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        jumpToBottom();
+      }
+    });
   }
 
   @override
   void dispose() {
     messageController.clear();
     isGotNewMessage.close();
+    canSendMessage.close();
     super.dispose();
   }
 }
