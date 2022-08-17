@@ -20,9 +20,9 @@ class MessageManager {
     return _databaseReference;
   }
 
-  void listenNewMessage({required Function(Event event) callback}){
+  void listenNewMessage({required Function(DatabaseEvent event) callback}){
     _databaseReference.onValue.listen((event) {
-      if(event.previousSiblingKey == null){
+      if(event.previousChildKey == null){
         callback.call(event);
       }
     });

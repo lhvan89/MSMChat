@@ -13,14 +13,14 @@ class AccountManager {
 
   Future initialize() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    databaseReference = FirebaseDatabase.instance.reference().child('users');
+    databaseReference = FirebaseDatabase.instance.ref().child('users');
   }
 
   Future<List<UserModel>> getListAccount() async {
     List<UserModel> listUser = [];
     final snapshot = await databaseReference.get();
-    if (snapshot?.value != null) {
-      final map = snapshot?.value as Map<dynamic, dynamic>;
+    if (snapshot.value != null) {
+      final map = snapshot.value as Map<dynamic, dynamic>;
       map.forEach((key, value) {
         UserModel user = UserModel.fromJson(value);
         listUser.add(user);

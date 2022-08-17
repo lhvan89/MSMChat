@@ -41,28 +41,29 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
                     },
                   ),
                   StreamBuilder<bool>(
-                      stream: cubit.isGotNewMessage,
-                      builder: (context, snapshot) {
-                        final isGetNewMessage = snapshot.data ?? false;
-                        return isGetNewMessage
-                            ? Positioned(
-                                child: InkWell(
-                                  child: const CircleAvatar(
-                                    backgroundColor: AppColor.greenActiveColor,
-                                    child: Icon(
-                                      Icons.arrow_downward,
-                                      color: AppColor.whiteColor,
-                                    ),
+                    stream: cubit.isGotNewMessage,
+                    builder: (context, snapshot) {
+                      final isGetNewMessage = snapshot.data ?? false;
+                      return isGetNewMessage
+                          ? Positioned(
+                              child: InkWell(
+                                child: const CircleAvatar(
+                                  backgroundColor: AppColor.greenActiveColor,
+                                  child: Icon(
+                                    Icons.arrow_downward,
+                                    color: AppColor.whiteColor,
                                   ),
-                                  onTap: () {
-                                    cubit.jumpToBottom();
-                                  },
                                 ),
-                                bottom: 10,
-                                right: 10,
-                              )
-                            : const SizedBox();
-                      }),
+                                onTap: () {
+                                  cubit.jumpToBottom();
+                                },
+                              ),
+                              bottom: 10,
+                              right: 10,
+                            )
+                          : const SizedBox();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -72,6 +73,15 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
               color: Colors.white,
               child: Row(
                 children: [
+                  IconButton(
+                    onPressed: () {
+                      cubit.pickUpImage();
+                    },
+                    icon: const Icon(
+                      Icons.image,
+                      color: AppColor.sdtcStartColor,
+                    ),
+                  ),
                   Expanded(
                       child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -127,14 +137,30 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
         message.username == AccountManager.instance.currentUser()?.username;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        mainAxisAlignment:
-            isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: [
-          if (!isSend) _avatar(message.name),
-          const SizedBox(width: 10),
-          _messageContent(context, message, isSend),
+          if (message.image.isNotEmpty)
+          Row(
+            mainAxisAlignment:
+            isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children: [
+              Image.network(message.image, width: 200, alignment: Alignment.centerRight,),
+            ],
+          ),
+          // if (message.image.isNotEmpty)
+          if (message.text.isNotEmpty)
+          const SizedBox(height: 16,),
+          if (message.text.isNotEmpty)
+          Row(
+            mainAxisAlignment:
+                isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!isSend) _avatar(message.name),
+              const SizedBox(width: 10),
+              _messageContent(context, message, isSend),
+            ],
+          ),
         ],
       ),
     );

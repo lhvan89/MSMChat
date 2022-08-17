@@ -7,6 +7,7 @@ import 'package:msmchat/pages/profile/profile_cubit.dart';
 import 'package:msmchat/utils/app_color.dart';
 import 'package:msmchat/widgets/widgets.dart';
 
+import '../../manager/storage_manager.dart';
 import '../base_staless_widget.dart';
 
 class ProfilePage extends BaseStatelessWidget<ProfileCubit> {
