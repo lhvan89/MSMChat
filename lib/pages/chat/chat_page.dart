@@ -1,9 +1,11 @@
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:msmchat/gen/assets.gen.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/base_staless_widget.dart';
 import 'package:msmchat/pages/chat/chat_cubit.dart';
 import 'package:msmchat/utils/app_color.dart';
+import 'package:msmchat/widgets/widget_network_image.dart';
 import 'package:msmchat/widgets/widgets.dart';
 
 import '../../manager/account_manager.dart';
@@ -144,7 +146,17 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
             mainAxisAlignment:
             isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              Image.network(message.image, width: 200, alignment: Alignment.centerRight,),
+              RoundedImage(
+                url: message.image,
+                width: 200,
+                height: 200,
+                radius: 8,
+                fit: BoxFit.cover,
+                image: Assets.images.noImage.image(),
+                borderWidth: 1,
+                borderColor: AppColor.borderGreyColor,
+                backgroundColor: Colors.white,
+              ),
             ],
           ),
           // if (message.image.isNotEmpty)

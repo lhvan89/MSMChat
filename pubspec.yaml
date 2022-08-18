@@ -44,6 +44,9 @@ dependencies:
   firebase_storage: ^10.3.5
   file_picker: ^5.0.1
   image_picker: ^0.8.5+3
+  cached_network_image: ^3.2.1
+  build_runner: ^2.2.0
+  flutter_gen_runner: ^4.3.0
 
 dev_dependencies:
   flutter_test:
@@ -97,3 +100,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_gen:
+  output: lib/gen/ # Optional (default: lib/gen/)
+  line_length: 80 # Optional (default: 80)
+
+  # Optional
+  integrations:
+    flutter_svg: true
+    flare_flutter: true
+    rive: true
+flutter_intl:
+  enabled: true
