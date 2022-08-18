@@ -50,12 +50,11 @@ class ChatCubit extends BaseCubit {
   }
 
   Future<void> pickUpImage() async {
-    XFile? xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    XFile? xFile = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 768, imageQuality: 60);
     if (xFile != null) {
       File? file = File(xFile.path);
       await StorageManager.instance.uploadFile(file);
       urlFile = await StorageManager.instance.getDownloadURL(file);
-      print('========= $urlFile');
       if (urlFile.isNotEmpty) {
         sendMessage();
       }
