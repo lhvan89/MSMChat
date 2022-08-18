@@ -5,21 +5,16 @@ class StorageManager {
   StorageManager._instance();
   static final StorageManager instance = StorageManager._instance();
 
+  final Reference _storageReference = FirebaseStorage.instance.ref().child('images/');
 
   Future initialize() async {}
 
-  Future<void> uploadFile(File file) async {
+  Future<String> uploadFile(File file) async {
+    final fileName = file.path.split('/').last;
     try {
-      await FirebaseStorage.instance.ref().child('images/${file.path.split('/').last}').putFile(file);
+      await _storageReference.child(fileName).putFile(file);
+      return await _storageReference.child(fileName).getDownloadURL();
     } catch (e){
-      print(e);
-    }
-  }
-
-  Future<String> getDownloadURL(File file) async {
-    try {
-      return await FirebaseStorage.instance.ref().child('images/${file.path.split('/').last}').getDownloadURL();
-    } catch (e) {
       print(e);
       return '';
     }

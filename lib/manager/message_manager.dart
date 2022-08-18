@@ -6,10 +6,10 @@ class MessageManager {
   MessageManager._instance();
   static final MessageManager instance = MessageManager._instance();
 
-  DatabaseReference _databaseReference = FirebaseDatabase.instance.reference();
+  DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
 
   void connectRoom(String roomCode) {
-    _databaseReference = FirebaseDatabase.instance.reference().child('messages/$roomCode');
+    _databaseReference = FirebaseDatabase.instance.ref().child('messages/$roomCode');
   }
 
   Future<void> saveMessage(MessageModel message) async {

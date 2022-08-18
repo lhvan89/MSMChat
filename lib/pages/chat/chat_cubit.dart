@@ -53,8 +53,7 @@ class ChatCubit extends BaseCubit {
     XFile? xFile = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 768, imageQuality: 60);
     if (xFile != null) {
       File? file = File(xFile.path);
-      await StorageManager.instance.uploadFile(file);
-      urlFile = await StorageManager.instance.getDownloadURL(file);
+      urlFile = await StorageManager.instance.uploadFile(file);
       if (urlFile.isNotEmpty) {
         sendMessage();
       }
