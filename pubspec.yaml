@@ -47,6 +47,7 @@ dependencies:
   cached_network_image: ^3.2.1
   build_runner: ^2.2.0
   flutter_gen_runner: ^4.3.0
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:

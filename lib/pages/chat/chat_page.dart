@@ -4,6 +4,7 @@ import 'package:msmchat/gen/assets.gen.dart';
 import 'package:msmchat/models/user_model.dart';
 import 'package:msmchat/pages/base_staless_widget.dart';
 import 'package:msmchat/pages/chat/chat_cubit.dart';
+import 'package:msmchat/pages/view_photo/view_photo_page.dart';
 import 'package:msmchat/utils/app_color.dart';
 import 'package:msmchat/widgets/widget_network_image.dart';
 import 'package:msmchat/widgets/widgets.dart';
@@ -146,16 +147,26 @@ class ChatPage extends BaseStatelessWidget<ChatCubit> {
             mainAxisAlignment:
             isSend ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              RoundedImage(
-                url: message.image,
-                width: 200,
-                height: 200,
-                radius: 8,
-                fit: BoxFit.cover,
-                image: Assets.images.noImage.image(),
-                borderWidth: 1,
-                borderColor: AppColor.borderGreyColor,
-                backgroundColor: Colors.white,
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ViewPhotoPage(urlPhoto: message.image),
+                    ),
+                  );
+                },
+                child: RoundedImage(
+                  url: message.image,
+                  width: 200,
+                  height: 200,
+                  radius: 8,
+                  fit: BoxFit.cover,
+                  image: Assets.images.noImage.image(),
+                  borderWidth: 1,
+                  borderColor: AppColor.borderGreyColor,
+                  backgroundColor: Colors.white,
+                ),
               ),
             ],
           ),
